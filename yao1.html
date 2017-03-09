@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>表单验证</title>
+    <style>
+        p{
+            color:grey;
+        }
+        input{
+            border-radius:5px;
+        }
+        [type = button]{
+            background-color:blue;
+            color:white;
+        }
+        body{
+            text-align:center;
+        }
+        form{
+            margin-top:200px;
+        }
+    </style>
+</head>
+<body>
+    <form method="get">
+        <div>
+            <label>名称</label>
+            <input type="text" name="input1" id="name1"/>
+            <input type="button" value="验证" onclick="jian('name1','tishi1')"/>
+            <p id="tishi1">输入4-16个字符</p>
+        </div>
+        <div>    
+            <label>名称</label>
+            <input type="text" name="input2" id="name2"/>
+            <input type="button" value="验证"  onclick="jian('name2','tishi2')"/>
+            <p id="tishi2">&nbsp;</p>
+        </div>
+        <div>
+            <label>名称</label>
+            <input type="text" name="input3" id="name3" />
+            <input type="button" value="验证" onclick="jian('name3','tishi3')" />
+            <p id="tishi3"> </p>
+        </div>
+    <script type="text/javascript">
+        // function validate_required(field){
+        //     with (field)
+        //     {
+        //         if(value==null||value=="")
+        //         {
+        //             return false;   
+        //         }
+        //         else{
+        //             return true;
+        //         }
+        //     }
+        // }
+        // function validate_name1(){
+        //     var name1=document.getElementById("name1");
+        //     var step1 = validate_required(name1);
+        //     var tishi1 = document.getElementById("tishi1");
+        //     if(!step1) {
+        //         name1.style.borderColor="red";
+        //         tishi1.innerHTML = "内容不能为空！";
+        //         tishi1.style.color = "red";
+        //         return false;
+        //     }
+        //     var step2 = validate_size(name1,4,16);
+        //     if(!step2){
+        //         return false;
+        //     }
+        //     name1.style.borderColor="green";
+        //     tishi1.innerHTML = "验证通过，你真棒！";
+        //     tishi1.style.color = "green";
+        //     return true;
+        // }
+
+        // function validate_size(field,zuixiao,zuida){
+        //     with(field)
+        //     {
+        //         var len=value.length;
+        //         if(len>zuida){
+        //             alert("超过规定长度！")
+        //             return false;
+        //         }
+        //         if(len<zuixiao){
+        //             alert("小于最小长度!")
+        //             return false;
+        //         }
+        //         return true;
+        //     }
+        // }
+        function jian(myid,mytishi){
+            var me = document.getElementById(myid);
+            var tishi = document.getElementById(mytishi);
+            var len = me.value.length;
+            if(len == 0) {
+                me.style.borderColor = "red";
+                tishi.innerHTML = "不能为空！";
+                tishi.style.color = "red";
+            }
+            else if(len<4) {
+                tishi.innerHTML = "不能小于4个字符！";
+            }
+            else if(len>16) {
+                tishi.innerHTML = "不能大于16个字符！";
+            }
+            else if(len>4&&len<16) {
+                tishi.innerHTML = "通过验证，你真棒！";
+                tishi.style.color = "green";
+                me.style.borderColor = "green";
+            }      
+        }
+    </script>
+</body>
+</html>
