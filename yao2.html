@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>表单验证</title>
+    <style>
+        p{
+            color:grey;
+        }
+        /*input{
+            border-radius:5px;
+        }*/
+        [type = button]{
+            background-color:blue;
+            color:white;
+        }
+        body{
+            text-align:center;
+        }
+        form{
+            margin-top:200px;
+        }
+    </style>
+</head>
+<body>
+    <form method="get" onsubmit = "return submitnow()">
+        <div>
+            <label>名称</label>
+            <input type="text" name="name" id="myname"/>
+            <p id="tname" style="display:none">必填，长度为4-16个字符</p>
+        </div>
+        <div>    
+            <label>密码</label>
+            <input type="password" name="pwd" id="mypwd"/>
+            <p id="tpwd" style="display:none">密码</p>
+        </div>
+        <div>
+            <label>确认密码</label>
+            <input type="password" name="ppwd" id="myppwd" />
+            <p id="tppwd" style="display:none">与之前输入一致</p>
+        </div>
+        <div>
+            <label>邮箱</label>
+            <input type="text" name="email" id="myemail" />
+            <p id="temail" style="display:none">邮箱格式</p>
+        </div>
+        <div>
+            <label>手机</label>
+            <input type="text" name="phone" id="myphone" />
+            <p id="tphone" style="display:none">11位手机号</p>
+        </div>
+        <div>
+            <input type="submit" value = "提交" />
+        </div>
+    </form>
+    <script type="text/javascript">
+        // function validate_required(field){
+        //     with (field)
+        //     {
+        //         if(value==null||value=="")
+        //         {
+        //             return false;   
+        //         }
+        //         else{
+        //             return true;
+        //         }
+        //     }
+        // }
+
+        //验证是否为空，为空则提示相应
+        function validate_blank(kid,tid,str){
+            var kuang= document.getElementById(kid);
+            var tishi = document.getElementById(tid);
+            var word = kuang.value;
+            if(word == null||word == "") {
+                kuang.style.borderColor = "red";
+                tishi.style.display = "block";
+                tishi.innerHTML = str;     
+                tishi.style.color = "red";          
+                return false;
+            }
+            return true;
+        }
+
+        // 验证通过时框与提示的样式
+        function suc(kid,tid,str){
+            var kuang= document.getElementById(kid);
+            var tishi = document.getElementById(tid);
+             kuang.style.borderColor = "green";
+             tishi.style.display = "block";
+             tishi.innerHTML = str;     
+             tishi.style.color = "green";    
+        }
+        //没通过验证时候的样式与文字
+         function fai(kid,tid,str){
+            var kuang= document.getElementById(kid);
+            var tishi = document.getElementById(tid);
+             kuang.style.borderColor = "red";
+             tishi.style.display = "block";
+             tishi.innerHTML = str;     
+             tishi.style.color = "red";    
+         }
+        //输入内容长度的限制
+        function validate_length(kid,tid,minlen,maxlen) {
+            var kuang= document.getElementById(kid);
+            var tishi = document.getElementById(tid);
+            var len = kuang.value.length;      
+            if(len<minlen&&len>0){
+                fai(kid,tid,"长度不能少于"+minlen+"个字符！");   
+            }   
+            if(len>maxlen){
+                 fai(kid,tid,"长度不能超过"+maxlen+"个字符！");   
+            }   
+            if(len>=minlen && len<=maxlen){
+                return true;
+            }
+        }
+        //邮箱格式
+        function validate_email(kid,tid) {
+            var kuang= document.getElementById(kid);
+            var tishi = document.getElementById(tid);
+            with(kuang){
+                var apos= value.indexOf("@");
+                var dotpos = value.lastIndexOf(".");
+                if(apos<1||dotpos-apos<2){
+                    fai(kid,tid,"邮箱格式错误！");
+                    return false;
+                }
+                else{
+                    suc(kid,tid,"邮箱格式正确：）");
+                    return true;
+                }
+            }
+        }
+        //选中时显示提示,验证上一项;n为框序号，从0开始
+        function check(kid,tid,n){
+            var f=Array(6);
+            f[0]=validate_name;
+            f[1]=validate_pwd;
+            f[2]=validate_ppwd;
+            f[3]=validate_myemail;
+            f[4]=validate_phone;
+            var kuang = document.getElementById(kid);
+            var tishi = document.getElementById(tid);
+            kuang.onclick = function(){
+               tishi.style.display = "block"; 
+         //    event.cancelBubble = true ;
+               f[n-1]();
+            }          
+        }
+        //选中时显示提示,未选中时验证
+        function fucus() {
+            check("myname","tname",0);
+            check("mypwd","tpwd",1);
+            check("myppwd","tppwd",2);
+            check("myemail","temail",3);
+            check("myphone","tphone",4);
+
+            // document.onclick = function () {
+            //         validate_phone();
+            //     }
+         }
+        //名称输入框验证结果
+        function validate_name(){
+            var b = validate_blank('myname','tname','名称不能为空');
+            var l = validate_length('myname','tname',4,8);
+            if(b&&l) {
+                suc("myname","tname","名称验证成功：）");
+                return true;
+                }
+            else {return false;}
+        }
+        //密码框输入验证结果
+        function validate_pwd(){
+            var b = validate_blank('mypwd','tpwd','密码不能为空');
+            if(b) {
+                suc("mypwd","tpwd","密码可用：）");
+                return true;
+            }
+            else {return false;}
+        }
+        //密码确认框验证
+        function validate_ppwd(){
+            var pwd = document.getElementById("mypwd").value;
+            var ppwd = document.getElementById("myppwd").value;
+            var b=validate_blank('myppwd','tppwd','密码不能为空');
+            if(!b) {return false;}
+            if(pwd==ppwd) {
+                suc("myppwd","tppwd","一致：）");
+                return true;
+            }
+            else{
+                fai("myppwd","tppwd","与第一次输入不一致！"); 
+                return false;
+                }
+        }
+        //邮箱筐输入验证结果
+        function validate_myemail(){
+            var b = validate_blank('myemail','temail','邮箱不能为空');
+            var e = validate_email('myemail','temail');
+            if(b&&e) {return true;}
+            else {return false;}
+        }
+        //手机号框验证
+        function validate_phone(){
+            var reg =/^0{0,1}(13[0-9]|15[7-9]|153|156|18[7-9])[0-9]{8}$/;
+            var phone = document.getElementById("myphone").value;
+            if(reg.test(phone)){
+                suc("myphone","tphone","手机号格式正确");
+                return true;
+            }
+            else{
+                fai("myphone","tphone","手机号是真的吗？");
+                return false;
+                }
+        }
+        //点submit全局校验
+        function submitnow(){
+            var p = validate_phone();
+            if(!p) {return false;}
+            // alert(validate_name());
+            // alert(validate_pwd());
+            // alert(validate_ppwd());
+            //alert(validate_myemail());
+            if(!(validate_name()&&validate_pwd()&&validate_ppwd()&&validate_myemail())){
+                alert("输入有误！")
+                return false;
+            }
+            //表单不提交！
+            alert("可以提交了");
+            return false;
+        }
+    window.onload = fucus();
+    </script>
+</body>
+</html>
